@@ -6,10 +6,12 @@ using namespace sf;
 void menu(RenderWindow& window) {
 
 	Texture menuTexture1, menuTexture2, menuTexture3, rulesTexture, backgroundTexture;
+
 	menuTexture1.loadFromFile("images/play_button.png");
 	menuTexture2.loadFromFile("images/rules_button.png");
 	rulesTexture.loadFromFile("images/rules_window.png");
 	backgroundTexture.loadFromFile("images/background.png");
+
 	Sprite menu1(menuTexture1), menu2(menuTexture2), rules(rulesTexture), menuBg(backgroundTexture);
 	bool isMenu = 1;
 	int menuNum = 0;
@@ -32,7 +34,7 @@ void menu(RenderWindow& window) {
 		if (Mouse::isButtonPressed(Mouse::Left))
 		{
 			if (menuNum == 1) isMenu = false;//если нажали первую кнопку, то выходим из меню - начинается игра
-			if (menuNum == 2) { window.draw(rules); window.display(); while (!Keyboard::isKeyPressed(Keyboard::Num0)); }
+			if (menuNum == 2) { window.draw(rules); window.display(); while (!Keyboard::isKeyPressed(Keyboard::Escape)); }
 
 		}
 

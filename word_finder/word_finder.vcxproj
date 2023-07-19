@@ -131,11 +131,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Menu2.cpp" />
+    <ClCompile Include="InputWordsAndClues.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Menu2.hpp" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="InputWordsAndClues.hpp" />
     <ClInclude Include="menu.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
