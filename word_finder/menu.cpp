@@ -34,7 +34,7 @@ void menu(RenderWindow& window) {
 		if (Mouse::isButtonPressed(Mouse::Left))
 		{
 			if (menuNum == 1) isMenu = false;//если нажали первую кнопку, то выходим из меню - начинается игра
-			if (menuNum == 2) { window.draw(rules); window.display(); while (!Keyboard::isKeyPressed(Keyboard::Escape)); }
+			if (menuNum == 2) { window.draw(rules); window.display(); while (!Keyboard::isKeyPressed(Keyboard::Enter)); }
 
 		}
 
