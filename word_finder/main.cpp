@@ -1,97 +1,339 @@
 #include <iostream>
-#include "menu.hpp"
+#include <sstream>
+#include <list>
+#include <vector>
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 
+using namespace std;
 using namespace sf;
 
-//void menu(RenderWindow& window);
-int main() {
+//текст
+/*class text_two
+{
+private:
+	Text mtext;  //объект текста
+	float xpos;
+	float ypos;
+	String str; // сам текст
+	int size_font = 48;
+	Color menu_text_color = Color::Black;
+	Font font;
+public:
+	text_two(Text& mtext, float xpos, float ypos, String str, int size_font,
+		Color menu_text_color, Font font){
 
-	//создание окна
-	RenderWindow window(sf::VideoMode(1440, 1024), "Alias");
+		font.loadFromFile("font/Forum.ttf");
+		mtext.setFont(font);
+		mtext.setCharacterSize(size_font);
+		mtext.setPosition(xpos, ypos);
+		mtext.setString(str);
+		mtext.setFillColor(menu_text_color);
 
-	Image icon;
-	if (!icon.loadFromFile("images/icon.png")) return 1;
-	window.setIcon(32, 32, icon.getPixelsPtr());
-
-
-	menu(window);
-	while (window.isOpen())
-	{
-		Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == Event::Closed || event.key.code == Keyboard::Escape) window.close();
-		}
 	}
-	/*
-	//создание фона
-	RectangleShape Background_sh(Vector2f(1440, 1024));
-	Texture background_tx;
-	if (!background_tx.loadFromFile("images/background.png")) return 1;
-	Background_sh.setTexture(&background_tx);
+	//текст будет следить за спрайтом
+	virtual void sleditForSprite(Sprite& s, float x, float y) {
 
-	//создание иконки
-	Image icon;
-	if (!icon.loadFromFile("images/icon.png")) return 1;
-	window.setIcon(32, 32, icon.getPixelsPtr());
+		mtext.setPosition(s.getPosition().x + x, s.getPosition().y + y);
+
+	}
+
+	//дать число тексту
+	void getChislo(float n) {
+
+		ostringstream chislo;
+
+		chislo << n;
+
+		mtext.setString(str + chislo.str());
+
+	}
+
+	//ф-я для текста
+	void setString(string name) {
+
+		mtext.setString(name);
+
+	}
+
+	virtual void setPosition(float x, float y) {
+
+		mtext.setPosition(x, y);
+
+	}
+
+	void setFillTextColor(float R, float G1, float B) {
+
+		mtext.setFillColor(Color(R, G1, B));
+
+	}
+
+	//поменять размер шрифта
+	void setCharacterSize(float a) {
+
+		mtext.setCharacterSize(a);
+
+	}
+
+	//нарисовать в окне
+	virtual void draw(RenderWindow& window) {
+
+		window.draw(mtext);
+
+	};
+};*/
+class text {
+private:
+
+	string shribe;
+	Font font;
+
+public:
+
+	Text txt;
+
+	text(String shribeName) {
+
+		font.loadFromFile("font/Forum.ttf");
+
+		txt.setFont(font);
+		txt.setCharacterSize(20);
+
+		//начальный цвет
+		txt.setFillColor(Color(0, 0, 0));
+
+		txt.setString(shribeName);
+
+		shribe = shribeName;
+
+	}
+
+	//текст будет следить за спрайтом
+	virtual void sleditForSprite(Sprite& s, float x, float y) {
+
+		txt.setPosition(s.getPosition().x + x, s.getPosition().y + y);
+
+	}
+
+	//дать число тексту
+	void getChislo(float n) {
+
+		ostringstream chislo;
+
+		chislo << n;
+
+		txt.setString(shribe + chislo.str());
+
+	}
+
+	//ф-я для текста
+	void setString(string name) {
+
+		txt.setString(name);
+
+	}
+
+	virtual void setPosition(float x, float y) {
+
+		txt.setPosition(x, y);
+
+	}
+
+	void setFillTextColor(float R, float G1, float B) {
+
+		txt.setFillColor(Color(R, G1, B));
+
+	}
+
+	//поменять размер шрифта
+	void setCharacterSize(float a) {
+
+		txt.setCharacterSize(a);
+
+	}
+
+	//нарисовать в окне
+	virtual void draw(RenderWindow& window) {
+
+		window.draw(txt);
+
+	};
+
+
+};
+
+//кнопка
+class Button :public text {
+private:
+
+	float w, h; //ширина и высота кнопки
+
+	bool press;   // нажата ли
+
+
+public:
+
+	RectangleShape button; //сам крвадрат
+
+	Button(float W, float H, string shribeName) :text(shribeName) {
+
+
+		w = W;
+		h = H;
+
+		press = false;
+
+		button.setSize(Vector2f(W, H));
+
+		txt.setPosition(button.getPosition());
+
+	}
+
+	//кнопка следит за спрайтом
+	void sleditForSprite(Sprite& s, float x, float y) override {
+
+		button.setPosition(s.getPosition().x + x, s.getPosition().y + y);
+		txt.setPosition(s.getPosition().x + x, s.getPosition().y + y);
+
+	}
+
+	//рисуеи и кнопк(квадрат) и текст
+	void draw(RenderWindow& window)override {
+
+		txt.setPosition(button.getPosition());
+
+
+		window.draw(button);
+		window.draw(txt);
+	}
+
+	//нажатие
+	bool pressed(Event& event, Vector2f  pos) {
+
+		if (button.getGlobalBounds().contains(pos.x, pos.y) && event.type == Event::MouseButtonPressed && !press) {
+
+			if (event.key.code == Mouse::Left) {
+
+				press = true;
+				return true;
+			}
+
+		};
+
+		if (!(press)) return false;
+
+		if (press) {
+
+			if (!(event.type == Event::MouseButtonPressed)) {
+
+				press = false;
+
+			}
+
+			return false;
+
+		}
+
+	};
+
+	//наведeна мышка
+	bool navediaMouse(Event& event, Vector2f  pos) {
+
+		if (button.getGlobalBounds().contains(pos.x, pos.y)) return true;
+
+		else return false;
+
+	}
+
+	//поменять размеры квадрата кнопки 
+	void setButtonSize(float W, float H) {
+
+		w = W;
+		h = H;
+
+		button.setSize(Vector2f(W, H));
+
+	}
+
+	//Поменять на центр 
+	void setOringCenter() {
+
+		button.setOrigin(w / 2, h / 2);
+	}
+
+	//поменять позицию
+	void setPosition(float x, float y)  override {
+
+		button.setPosition(x, y);
+
+	}
+	//поменять цвет квадрата
+	void setFillRacktengelColor(float R, float G, float B) {
+
+		button.setFillColor(Color(R, G, B));
+
+	}
+};
+
+int main()
+{
+	// создание окна #1
+	RenderWindow window(sf::VideoMode(1440, 900), "Alias");
+
+	RectangleShape background(Vector2f(1440, 900));
+	Texture main_window;
+	if (!main_window.loadFromFile("images/main_window.png")) return 4;
+	background.setTexture(&main_window);
+
+	// создание кнопки главного экрана
+	Button a(500, 70, "                  Play");
+	a.setFillRacktengelColor(202, 189, 233);
+	a.setFillTextColor(0, 0, 0);
+	a.setPosition(835, 718);
+	a.setCharacterSize(48);
+
 
 	while (window.isOpen())
 	{
+
+		Vector2i mouse = Mouse::getPosition(window);
+		Vector2f mousePositon = window.mapPixelToCoords(mouse);
+
 		Event event;
 		while (window.pollEvent(event))
 		{
-			if (event.type == Event::Closed || event.key.code == Keyboard::Escape) window.close();
+
+			if (event.type == sf::Event::Closed)
+				window.close();
+
 		}
+
+		if (a.navediaMouse(event, mousePositon)) {
+
+			a.setFillRacktengelColor(255, 216, 132);
+
+		}
+		else
+		{
+			a.setFillRacktengelColor(202, 189, 233);
+
+		}
+
+		if (a.pressed(event, mousePositon)) {
+
+			if (!main_window.loadFromFile("images/game_window.png")) return 4;
+			background.setTexture(&main_window);
+
+			a.setPosition(2000, 2000);
+		}
+
 		window.clear();
-		window.draw(Background_sh);
+		window.draw(background);
+		a.draw(window);
 		window.display();
 	}
-	*/
+
+
 
 	return 0;
 }
 
-//void menu(RenderWindow& window) {
-//
-//	Texture menuTexture1, menuTexture2, menuTexture3, rulesTexture, backgroundTexture;
-//	menuTexture1.loadFromFile("images/play_button.png");
-//	menuTexture2.loadFromFile("images/rules_button.png");
-//	rulesTexture.loadFromFile("images/rules_window.png");
-//	backgroundTexture.loadFromFile("images/background.png");
-//	Sprite menu1(menuTexture1), menu2(menuTexture2), rules(rulesTexture), menuBg(backgroundTexture);
-//	bool isMenu = 1;
-//	int menuNum = 0;
-//	menu1.setPosition(835, 718);
-//	menu2.setPosition(835, 829);
-//	menuBg.setPosition(0, 0);
-//
-//	/////////////////////////////////////////
-//
-//	while (isMenu)
-//	{
-//		menu1.setColor(Color::White);
-//		menu2.setColor(Color::White);
-//		menuNum = 0;
-//		window.clear(); //!возможно убрать
-//
-//		if (IntRect(835, 718, 300, 50).contains(Mouse::getPosition(window))) { menuNum = 1; }
-//		if (IntRect(835, 829, 300, 50).contains(Mouse::getPosition(window))) { menuNum = 2; }
-//
-//		if (Mouse::isButtonPressed(Mouse::Left))
-//		{
-//			if (menuNum == 1) isMenu = false;//если нажали первую кнопку, то выходим из меню - начинается игра
-//			if (menuNum == 2) { window.draw(rules); window.display(); while (!Keyboard::isKeyPressed(Keyboard::Num0)); }
-//
-//		}
-//
-//		window.draw(menuBg);
-//		window.draw(menu1);
-//		window.draw(menu2);
-//
-//		window.display();
-//	}
-	////////////////////////////////////////////////////
-
-//}
